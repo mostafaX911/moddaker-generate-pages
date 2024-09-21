@@ -1,4 +1,3 @@
-var http = require("http");
 var fs = require("fs");
 const reader = require("xlsx");
 const file = reader.readFile("./test.xlsx");
@@ -67,13 +66,6 @@ for (let i = 1; i <= 604; i++) {
     return false;
   })[0]?.nass_7;
 
-  const tafsirs = pageArr.filter((res) => {
-    if (res.type === "tafsir") {
-      return true;
-    }
-    return false;
-  });
-
   const fawaed = pageArr.filter((res) => {
     if (res.type === "fawaed") {
       return true;
@@ -82,19 +74,6 @@ for (let i = 1; i <= 604; i++) {
   });
 
   var fileName = `./pages/${i}/index.html`;
-
-  // http
-  //   .createServer(function (req, res) {
-  //     var html = buildHtml(req);
-
-  //     res.writeHead(200, {
-  //       "Content-Type": "text/html",
-  //       "Content-Length": html.length,
-  //       Expires: new Date().toUTCString(),
-  //     });
-  //     res.end(html);
-  //   })
-  //   .listen(8080);
 
   function buildHtml() {
     var header = `<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta http-equiv="X-UA-Compatible" content="ie=edge"/><title>الصفحة ١ - المختصر في تفسير القرآن الكريم</title><style>html {
@@ -308,9 +287,6 @@ li {
       </div>
     </div>`;
 
-    // concatenate header string
-    // concatenate body string
-
     return (
       "<!DOCTYPE html>" +
       "<html><head>" +
@@ -326,6 +302,5 @@ li {
     if (err) {
       return console.log(err);
     }
-    console.log("The file was saved!");
   });
 }

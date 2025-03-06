@@ -1,18 +1,18 @@
 const fsExtra = require("fs-extra");
 const reader = require("xlsx");
-const file = reader.readFile("./test.xlsx");
+const file = reader.readFile("./en.xlsx");
 let data = [];
 const useFolders = true;
 
 function convertEnNumberToAr(number) {
-  return number.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+  return number.toString().replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[d]);
 }
 
 function buildHtml(page, body) {
   const header = `
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-  <title>الصفحة ${convertEnNumberToAr(page)} - المختصر في تفسير القرآن الكريم</title>
+  <title>page ${page} - المختصر في تفسير القرآن الكريم</title>
     <style>html {
     font-size: 17px;
     }
@@ -141,30 +141,25 @@ function buildHtml(page, body) {
     "<!DOCTYPE html>" +
     "<html><head>" +
     header +
-    `</head><body class="rtl">` +
+    `</head><body class="ltr">` +
     `
     <header class="site-header">
       <div class="wrapper site-header--wrapper">
         <div class="site-header--item">
-        ${
-          page === 1
-            ? ""
-            : `<a href="./${page - 1}.html"><span>→</span></a>`
-        }
-          
+           ${
+             page === 604
+               ? ""
+               : `<a href="./${page + 1}.html"><span>←</span></a>`
+           }
         </div>
-        <div class="site-header--item"><h1>الصفحة ${convertEnNumberToAr(page)}</h1></div>
+        <div class="site-header--item"><h1>page ${page}</h1></div>
         <div class="site-header--item">
-          ${
-            page === 604
-              ? ""
-              : `<a href="./${page + 1}.html"><span>←</span></a>`
-          }
+        ${page === 1 ? "" : `<a href="./${page - 1}.html"><span>→</span></a>`}
+
         </div>
       </div>
     </header>
-    `
-    +
+    ` +
     `<div class="wrapper body--wrapper">` +
     body +
     `</div>` +
@@ -182,36 +177,38 @@ for (let i = 0; i < sheets.length; i++) {
 
 for (let i = 1; i <= 604; i++) {
   const filename = useFolders ? `./pages/${i}/index.html` : `./pages/${i}.html`;
-  const pageArr = data.filter((res) => res.page === i).sort((a, b) => a.order_7 - b.order_7);
+  const pageArr = data
+    .filter((res) => res.page === i)
+    .sort((a, b) => a.order_7 - b.order_7);
   const htmlArr = [];
-  
+
   const fawaed = pageArr.filter((res) => {
     if (res.type === "fawaed") {
       return true;
     }
     return false;
   });
-  
+
   for (let j = 0; j < pageArr.length; j++) {
     const row = pageArr[j];
     const type = row.type; // "meta", "maqased", "intro", "tafsir", "fawaed", "rabt"
     const metaType = row.meta_type; // "sura_name", "sura_type", "word_maqased", "word_tafsir", "word_fawaed"
-    const nass7 = convertEnNumberToAr(row.nass_7);
+    const nass7 = row.translation;
 
     if (type === "meta" && metaType === "sura_name") {
-      htmlArr.push(`<h2>${nass7}</h2>`)
+      htmlArr.push(`<h2>${nass7}</h2>`);
     }
     if (type === "meta" && metaType === "sura_type") {
       htmlArr.push(`
         <div class="highlighted">
           <p>
-            سورة ${nass7}
+            ${nass7}
           </p>
         </div>
-      `)
+      `);
     }
     if (type === "meta" && metaType === "word_maqased") {
-      htmlArr.push(`<h3>${nass7}</h3>`)
+      htmlArr.push(`<h3>${nass7}</h3>`);
     }
     if (type === "maqased") {
       htmlArr.push(`
@@ -220,10 +217,10 @@ for (let i = 1; i <= 604; i++) {
             ${nass7}
           </p>
         </div>
-      `)
+      `);
     }
     if (type === "meta" && metaType === "word_tafsir") {
-      htmlArr.push(`<h3>${nass7}</h3>`)
+      htmlArr.push(`<h3>${nass7}</h3>`);
     }
     if (type === "intro") {
       htmlArr.push(`<div class="highlighted">
@@ -231,18 +228,20 @@ for (let i = 1; i <= 604; i++) {
           ${nass7}
         </p>
       </div>
-      `)
+      `);
     }
     if (type === "tafsir") {
-      htmlArr.push(`<p class="verse">(${convertEnNumberToAr(row.aya)}) ${convertEnNumberToAr(row.uthmani)}</p>
+      htmlArr.push(`<p class="verse">(${convertEnNumberToAr(
+        row.aya
+      )}) ${convertEnNumberToAr(row.uthmani)}</p>
         <div class="highlighted">
           <p>
             ${nass7}
           </p>
-        </div>`)
+        </div>`);
     }
     if (type === "meta" && metaType === "word_fawaed") {
-      htmlArr.push(`<h3 class="rtl">${nass7}</h3>`)
+      htmlArr.push(`<h3 class="ltr">${nass7}</h3>`);
     }
     if (type === "rabt") {
       htmlArr.push(`
@@ -251,20 +250,22 @@ for (let i = 1; i <= 604; i++) {
             ${nass7}
           </p>
         </div>
-      `)
+      `);
     }
   }
 
   if (fawaed.length > 0) {
     htmlArr.push(`
-      <div class="highlighted rtl">
+      <div class="highlighted ltr">
         <p>
-          ${fawaed.map((fawaed1) => {
-            return `${convertEnNumberToAr(fawaed1.nass_7)}`;
-          }).join("<br>")}
+          ${fawaed
+            .map((fawaed1) => {
+              return `${fawaed1.translation}`;
+            })
+            .join("<br>")}
         </p>
       </div>
-    `)
+    `);
   }
 
   const html = buildHtml(i, htmlArr.join(" "));

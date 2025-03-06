@@ -1,6 +1,6 @@
 const fsExtra = require("fs-extra");
 const reader = require("xlsx");
-const file = reader.readFile("./en.xlsx");
+const file = reader.readFile("./indo.xlsx");
 let data = [];
 const useFolders = true;
 
@@ -179,7 +179,7 @@ for (let i = 1; i <= 604; i++) {
   const filename = useFolders ? `./pages/${i}/index.html` : `./pages/${i}.html`;
   const pageArr = data
     .filter((res) => res.page === i)
-    .sort((a, b) => a.order_7 - b.order_7);
+    .sort((a, b) => a.order - b.order);
   const htmlArr = [];
 
   const fawaed = pageArr.filter((res) => {

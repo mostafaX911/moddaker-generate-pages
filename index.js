@@ -1,6 +1,6 @@
 const fsExtra = require("fs-extra");
 const reader = require("xlsx");
-const file = reader.readFile("./indo.xlsx");
+const file = reader.readFile("./Kyrgyz.xlsx");
 let data = [];
 const useFolders = true;
 

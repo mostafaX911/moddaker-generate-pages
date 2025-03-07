@@ -152,7 +152,7 @@ function buildHtml(page, body) {
                : `<a href="./${page + 1}.html"><span>←</span></a>`
            }
         </div>
-        <div class="site-header--item"><h1>page ${page}</h1></div>
+        <div class="site-header--item"><h1>баракча ${page}</h1></div>
         <div class="site-header--item">
         ${page === 1 ? "" : `<a href="./${page - 1}.html"><span>→</span></a>`}
 

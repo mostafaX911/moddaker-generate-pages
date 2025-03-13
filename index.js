@@ -1,6 +1,6 @@
 const fsExtra = require("fs-extra");
 const reader = require("xlsx");
-const file = reader.readFile("./Kyrgyz.xlsx");
+const file = reader.readFile("./Urdu.xlsx");
 let data = [];
 const useFolders = true;
 
@@ -141,21 +141,23 @@ function buildHtml(page, body) {
     "<!DOCTYPE html>" +
     "<html><head>" +
     header +
-    `</head><body class="ltr">` +
+    `</head><body class="rtl">` +
     `
     <header class="site-header">
       <div class="wrapper site-header--wrapper">
+        <div class="site-header--item">
+        ${page === 1 ? "" : `<a href="./${page - 1}.html"><span>→</span></a>`}
+
+        </div>
+        <div class="site-header--item"><h1>صفحہ ${convertEnNumberToAr(
+          page
+        )}</h1></div>
         <div class="site-header--item">
            ${
              page === 604
                ? ""
                : `<a href="./${page + 1}.html"><span>←</span></a>`
            }
-        </div>
-        <div class="site-header--item"><h1>баракча ${page}</h1></div>
-        <div class="site-header--item">
-        ${page === 1 ? "" : `<a href="./${page - 1}.html"><span>→</span></a>`}
-
         </div>
       </div>
     </header>
